@@ -1,57 +1,443 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Collaborative Programming Level 3</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tech Landing Page</title>
+
   <style>
-    /* Simple inline styles (you can move this to styles.css) */
-    body {
+    :root {
+      --bg-main: #ffffff;
+      --bg-secondary: #ADB5BD;
+      --text: #0f172a;
+      --muted: #475569;
+      --accent: #7c3aed;
+      --toggle-bg: #e5e7eb;
+      --toggle-thumb: #ffffff;
+    }
+
+    [data-theme="dark"] {
+      --bg-main: #020617;
+      --bg-secondary: #0f172a;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #a78bfa;
+      --toggle-bg: #1e293b;
+      --toggle-thumb: #a78bfa;
+    }
+
+    * {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #4e54c8, #8f94fb);
-      color: #fff;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter",
+        Roboto, sans-serif;
+    }
+
+    body {
+      background: var(--bg-main);
+      color: var(--text);
+    }
+
+    /* ===================== NAVBAR ===================== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      height: 56px;
+      display: flex;
+      background: linear-gradient(
+        to right,
+        var(--bg-main) 50%,
+        var(--bg-secondary) 50%
+      );
+      z-index: 100;
+    }
+
+    .nav-left,
+    .nav-right {
+      width: 50%;
+      padding: 0 60px;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-left {
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .nav-right {
+      justify-content: flex-end;
+    }
+
+    .logo {
+      font-weight: 700;
+    }
+
+    /* ===================== HAMBURGER ===================== */
+    .menu-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid var(--accent);
+      background: transparent;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      height: 100vh;
+      gap: 4px;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .menu-btn span {
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* ===================== DROPDOWN MENU ===================== */
+    .menu {
+      position: absolute;
+      top: 56px;
+      right: 60px;
+      background: var(--bg-main);
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      overflow: hidden;
+      display: none;
+      min-width: 160px;
+    }
+
+    .menu.open {
+      display: block;
+    }
+
+    .menu a {
+      display: block;
+      padding: 14px 18px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .menu a:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* ===================== THEME TOGGLE ===================== */
+    .theme-switch {
+      width: 48px;
+      height: 24px;
+      position: relative;
+    }
+
+    .theme-switch input {
+      opacity: 0;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: var(--toggle-bg);
+      border-radius: 999px;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: var(--toggle-thumb);
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+
+    input:checked + .slider::before {
+      transform: translateX(24px);
+    }
+
+    /* ===================== HERO ===================== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      margin-top: -80px;
+      padding-top: 80px;
+    }
+
+    .hero-left,
+    .hero-right {
+      width: 50%;
+      padding: 40px 80px;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-left {
+      justify-content: center;
       text-align: center;
     }
 
-    h1 {
+    .hero-right {
+      background: var(--bg-secondary);
+      justify-content: center;
+    }
+
+    .hero h1 {
       font-size: 3rem;
-      margin-bottom: 1rem;
+      margin-bottom: 20px;
     }
 
-    p {
-      font-size: 1.2rem;
-      max-width: 600px;
+    .hero h1 span {
+      color: var(--accent);
     }
 
-    .btn {
-      margin-top: 2rem;
-      padding: 12px 24px;
-      background: #fff;
-      color: #4e54c8;
+    .hero p {
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    .image-placeholder img {
+      width: 100%;
+      transform: scale(1.25);
+    }
+
+    /* ===================== LOGIN MODAL ===================== */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 200;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-content {
+      background-color: var(--bg-main);
+      margin: 10% auto;
+      padding: 30px 40px;
+      border-radius: 12px;
+      max-width: 400px;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      color: var(--text);
+    }
+
+    .modal-content h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-content label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid var(--muted);
+    }
+
+    .modal-content button {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent);
+      color: #fff;
       border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      border-radius: 6px;
       font-size: 1rem;
+      cursor: pointer;
       transition: background 0.3s ease;
-      text-decoration: none;
     }
 
-    .btn:hover {
-      background: #ddd;
+    .modal-content button:hover {
+      background: #5b21b6;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .error-msg {
+      color: red;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        flex-direction: column;
+      }
+
+      .hero-left,
+      .hero-right {
+        width: 100%;
+        padding: 32px 24px;
+      }
+
+      .menu {
+        right: 24px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .modal-content {
+        margin: 20% auto;
+        padding: 20px;
+      }
     }
   </style>
 </head>
-<body>
-  <h1>Collaborative Programming Level 3</h1>
-  <p>Welcome to the landing page for Collaborative Programming Level 3. 
-     Here you can find resources, project guidelines, and learning materials 
-     to help you grow your coding skills.</p>
-  <a href="#" class="btn">Get Started</a>
+
+<body data-theme="light">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <div class="logo">CoBot</div>
+
+      <!-- Hamburger -->
+      <button class="menu-btn" id="menuBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <!-- Dropdown -->
+      <div class="menu" id="menu">
+        <a href="#" id="loginLink">Login</a>
+        <a href="#">About Us</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <label class="theme-switch">
+        <input type="checkbox" id="themeToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-left">
+      <div>
+        <h1>CoBot <span>Programming</span> Starts Here</h1>
+        <p>A platform built to help you learn and train Cobot programming.</p>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="image-placeholder">
+        <img src="image/002.png" alt="Hero image">
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Log In</h2>
+      <div class="error-msg" id="errorMsg">Invalid credentials</div>
+      <form id="loginForm">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Log In</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // THEME TOGGLE
+    const toggle = document.getElementById("themeToggle");
+    toggle.addEventListener("change", () => {
+      document.body.setAttribute(
+        "data-theme",
+        toggle.checked ? "dark" : "light"
+      );
+    });
+
+    // DROPDOWN MENU
+    const menuBtn = document.getElementById("menuBtn");
+    const menu = document.getElementById("menu");
+    menuBtn.addEventListener("click", () => {
+      menu.classList.toggle("open");
+    });
+    document.addEventListener("click", (e) => {
+      if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+        menu.classList.remove("open");
+      }
+    });
+
+    // LOGIN MODAL
+    const loginLink = document.getElementById("loginLink");
+    const modal = document.getElementById("loginModal");
+    const closeBtn = modal.querySelector(".close");
+    const errorMsg = document.getElementById("errorMsg");
+
+    loginLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      modal.style.display = "block";
+      menu.classList.remove("open");
+      errorMsg.style.display = "none";
+    });
+
+    closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+      errorMsg.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+      if (e.target == modal) {
+        modal.style.display = "none";
+        errorMsg.style.display = "none";
+      }
+    });
+
+// LOGIN FORM SUBMIT WITH CREDENTIAL CHECK
+const loginForm = document.getElementById("loginForm");
+loginForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const username = loginForm.username.value;
+  const password = loginForm.password.value;
+
+  if (username === "admin" && password === "admin") {
+    // Correct credentials -> redirect to content.html
+    window.location.href = "content.html";
+  } else {
+    // Wrong credentials -> show error message
+    errorMsg.style.display = "block";
+  }
+});
+
+  </script>
+
 </body>
 </html>
